@@ -8,26 +8,8 @@ import (
 	"theAmazingSmsSender/app/common"
 	"theAmazingSmsSender/app/config"
 	"theAmazingSmsSender/app/helpers/twilio"
+	"theAmazingSmsSender/app/communications/rabbitMQ/tasks"
 )
-
-type SmsTask struct {
-	Queue      string
-	SmsMessage SmsMessage
-}
-
-type SmsMessage struct {
-	PhoneNumber string `json:"phone_number"`
-	MessageInfo string `json:"message_info"`
-}
-
-type PhoneCheckTask struct {
-	Queue             string
-	PhoneCheckMessage PhoneCheckMessage
-}
-
-type PhoneCheckMessage struct {
-	PhoneNumber string `json:"phone_number"`
-}
 
 var workerAmount, _ = strconv.Atoi(config.GetConfig().WORKER_AMOUNT)
 
@@ -149,7 +131,7 @@ func ConsumePhoneCheckQueue() {
 
 func smsSend(messageChannel <-chan amqp.Delivery) {
 	for d := range messageChannel {
-		var smsMessageData SmsMessage
+		var smsMessageData tasks.SmsMessage
 		err := json.Unmarshal(d.Body, &smsMessageData)
 		if err != nil {
 			log.WithFields(log.Fields{
@@ -169,7 +151,7 @@ func smsSend(messageChannel <-chan amqp.Delivery) {
 func checkPhone(messageChannel <-chan amqp.Delivery, ch *amqp.Channel) {
 	for d := range messageChannel {
 
-		var phoneCheckMessageData PhoneCheckMessage
+		var phoneCheckMessageData tasks.PhoneCheckMessage
 		err := json.Unmarshal(d.Body, &phoneCheckMessageData)
 		if err != nil {
 			log.WithFields(log.Fields{
