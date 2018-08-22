@@ -1,0 +1,43 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "qHvpabDFyMF+xd3FHszn/KREh/4=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "fc587f31c804fe6853cd90f0d8d90af588eca5bd",
+			"revisionTime": "2018-08-17T01:25:29Z"
+		},
+		{
+			"checksumSHA1": "eqYR9hqzByO4Jn5yRFWbpo4Jz/o=",
+			"path": "github.com/streadway/amqp",
+			"revision": "70e15c650864f4fc47f5d3c82ea117285480895d",
+			"revisionTime": "2018-08-06T23:38:56Z"
+		},
+		{
+			"checksumSHA1": "c92I8IgBAbpgqTHwOI3OxKpKjgg=",
+			"path": "github.com/subosito/twilio",
+			"revision": "ef2f13504366093ed052627008181166612c646d",
+			"revisionTime": "2016-09-01T00:14:14Z"
+		},
+		{
+			"checksumSHA1": "X1NTlfcau2XcV6WtAHF6b/DECOA=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "d585fd2cc9195196078f516b69daff6744ef5e84",
+			"revisionTime": "2017-12-16T04:08:15Z"
+		},
+		{
+			"checksumSHA1": "9gwZHdu7sMojYYoGl5Ax6NSFaeU=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded",
+			"revisionTime": "2018-08-15T07:37:39Z"
+		},
+		{
+			"checksumSHA1": "apLcjhTfa/nKhpXTXjpfIZxVTKQ=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded",
+			"revisionTime": "2018-08-15T07:37:39Z"
+		}
+	],
+	"rootPath": "theAmazingSmsSender"
+}
