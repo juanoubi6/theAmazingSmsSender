@@ -33,9 +33,9 @@ func newConfig() Config {
 		ENV:  GetEnv("ENV", "develop"),
 		PORT: GetEnv("PORT", "5000"),
 
-		TWILIO_SID:        GetEnv("TWILIO_SID", "ACb98ded914e1c12b0e276c4f164555f70"),
-		TWILIO_AUTH_TOKEN: GetEnv("TWILIO_AUTH_TOKEN", "487d710fa087d1a2f5f757d579a0d367"),
-		TWILIO_ACC_PHONE:  GetEnv("TWILIO_ACC_PHONE", "+19852418221"),
+		TWILIO_SID:        GetEnv("TWILIO_SID", ""),
+		TWILIO_AUTH_TOKEN: GetEnv("TWILIO_AUTH_TOKEN", ""),
+		TWILIO_ACC_PHONE:  GetEnv("TWILIO_ACC_PHONE", ""),
 
 		RABBITMQ_HOST:     GetEnv("RABBITMQ_HOST", "localhost"),
 		RABBITMQ_PORT:     GetEnv("RABBITMQ_PORT", "5672"),
