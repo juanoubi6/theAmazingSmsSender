@@ -131,6 +131,7 @@ func ConsumePhoneCheckQueue() {
 
 func smsSend(messageChannel <-chan amqp.Delivery) {
 	for d := range messageChannel {
+		println("Received SMS task")
 		var smsMessageData tasks.SmsMessage
 		err := json.Unmarshal(d.Body, &smsMessageData)
 		if err != nil {
@@ -150,7 +151,7 @@ func smsSend(messageChannel <-chan amqp.Delivery) {
 
 func checkPhone(messageChannel <-chan amqp.Delivery, ch *amqp.Channel) {
 	for d := range messageChannel {
-
+		println("Received phone check task")
 		var phoneCheckMessageData tasks.PhoneCheckMessage
 		err := json.Unmarshal(d.Body, &phoneCheckMessageData)
 		if err != nil {

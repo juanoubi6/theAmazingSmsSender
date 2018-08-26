@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+	"bufio"
+	"strings"
+)
 
 type Config struct {
 	ENV  string
@@ -22,6 +26,10 @@ var instance *Config
 
 func GetConfig() *Config {
 	if instance == nil {
+		err := readEnv()
+		if err != nil{
+			panic(err)
+		}
 		config := newConfig()
 		instance = &config
 	}
@@ -51,4 +59,29 @@ func GetEnv(key, fallback string) string {
 		return val
 	}
 	return fallback
+}
+
+func readEnv() error{
+	file, err := os.Open(".env")
+	if err != nil {
+		return nil
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		values := strings.Split(scanner.Text(),"=")
+		if len(values)==2{
+			err = os.Setenv(values[0],values[1])
+			if err != nil{
+				return err
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	return nil
 }
