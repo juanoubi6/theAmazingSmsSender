@@ -15,59 +15,9 @@ var workerAmount, _ = strconv.Atoi(config.GetConfig().WORKER_AMOUNT)
 
 func ConsumeSmsQueue() {
 
-	ch := common.GetRabbitMQChannel()
-	defer ch.Close()
-
-	//Queue declared but not needed if created previously
-	queue, err := ch.QueueDeclare(
-		"sms_queue",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"place": "declaring exchange",
-		}).Info(err.Error())
-	}
-
-	//Allow rabbitMQ to send me as many messages as workers I have
-	err = ch.Qos(
-		workerAmount,
-		0,
-		false,
-	)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"place": "prefetch count",
-		}).Info(err.Error())
-	}
-
-	msgs, err := ch.Consume(
-		queue.Name,
-		"",
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"place": "consuming message",
-		}).Info(err.Error())
-	}
-
-	forever := make(chan bool)
-
 	for i := 0; i < workerAmount; i++ {
-		go smsSend(msgs)
+		go consumeSmsQueueWorker(i)
 	}
-
-	log.Printf("Waiting for SMS tasks")
-	<-forever
 
 }
 
@@ -186,4 +136,76 @@ func checkPhone(messageChannel <-chan amqp.Delivery, ch *amqp.Channel) {
 
 		d.Ack(false)
 	}
+}
+
+func consumeSmsQueueWorker(number int){
+
+	ch := common.GetRabbitMQChannel()
+	defer ch.Close()
+
+	//Queue declared but not needed if created previously
+	queue, err := ch.QueueDeclare(
+		"sms_queue",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"place": "declaring exchange",
+		}).Info(err.Error())
+	}
+
+	//Allow rabbitMQ to send me as many messages as workers I have
+	err = ch.Qos(
+		workerAmount,
+		0,
+		false,
+	)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"place": "prefetch count",
+		}).Info(err.Error())
+	}
+
+	msgs, err := ch.Consume(
+		queue.Name,
+		"",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"place": "consuming message",
+		}).Info(err.Error())
+	}
+
+	forever := make(chan bool)
+
+	for d := range msgs {
+		println("Received SMS task on queue: " + strconv.Itoa(number))
+		/*var smsMessageData tasks.SmsMessage
+		err := json.Unmarshal(d.Body, &smsMessageData)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"place": "decoding message body",
+			}).Info(err.Error())
+		}
+		err = twilio.SendVerificationSMS(smsMessageData.MessageInfo, smsMessageData.PhoneNumber)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"place": "sending sms",
+			}).Info(err.Error())
+		}*/
+		d.Ack(false)
+	}
+
+	log.Printf("Waiting for SMS tasks on queue " + strconv.Itoa(number))
+	<-forever
+
 }
