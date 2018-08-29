@@ -141,7 +141,6 @@ func checkPhone(messageChannel <-chan amqp.Delivery, ch *amqp.Channel) {
 func consumeSmsQueueWorker(number int){
 
 	ch := common.GetRabbitMQChannel()
-	defer ch.Close()
 
 	//Queue declared but not needed if created previously
 	queue, err := ch.QueueDeclare(
