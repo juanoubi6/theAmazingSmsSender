@@ -9,6 +9,7 @@ import (
 	"theAmazingSmsSender/app/config"
 	"theAmazingSmsSender/app/helpers/twilio"
 	"theAmazingSmsSender/app/communications/rabbitMQ/tasks"
+	"time"
 )
 
 var workerAmount, _ = strconv.Atoi(config.GetConfig().WORKER_AMOUNT)
@@ -132,6 +133,7 @@ func ConsumePhoneCheckQueue() {
 func smsSend(messageChannel <-chan amqp.Delivery) {
 	for d := range messageChannel {
 		println("Received SMS task")
+		time.Sleep(time.Millisecond*200)
 		/*var smsMessageData tasks.SmsMessage
 		err := json.Unmarshal(d.Body, &smsMessageData)
 		if err != nil {
